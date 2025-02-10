@@ -114,11 +114,11 @@
           <td>
             <div class="input-group">
               <label for="panelWidth">Ширина (мм):</label>
-              <input type="number" id="panelWidth" value="2800" min="1" inputmode="numeric" data-lastvalid="2800">
+              <input type="number" id="panelWidth" value="2800" min="1" inputmode="numeric">
             </div>
             <div class="input-group">
               <label for="panelHeight">Высота (мм):</label>
-              <input type="number" id="panelHeight" value="700" min="1" inputmode="numeric" data-lastvalid="700">
+              <input type="number" id="panelHeight" value="700" min="1" inputmode="numeric">
             </div>
           </td>
           <td>
@@ -131,7 +131,7 @@
           <td colspan="2">
             <div class="input-group">
               <label for="panelCount">Количество панелей:</label>
-              <input type="number" id="panelCount" value="1" min="1" inputmode="numeric" data-lastvalid="1">
+              <input type="number" id="panelCount" value="1" min="1" inputmode="numeric">
             </div>
           </td>
         </tr>
@@ -144,7 +144,7 @@
           <td>
             <div class="input-group">
               <label for="veneerPrice">Цена за м²:</label>
-              <input type="number" id="veneerPrice" value="1" step="0.01" min="0" inputmode="decimal" data-lastvalid="1">
+              <input type="number" id="veneerPrice" value="1" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
@@ -159,7 +159,7 @@
           <td>
             <div class="input-group">
               <label for="lacquerPrice">Цена за м²:</label>
-              <input type="number" id="lacquerPrice" value="3" step="0.01" min="0" inputmode="decimal" data-lastvalid="3">
+              <input type="number" id="lacquerPrice" value="3" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
@@ -179,36 +179,21 @@
   </div>
 
   <script>
-    // Функция для получения корректного значения:
-    // Если поле пустое, используем последнее валидное значение (хранимое в data-lastvalid)
-    function getValidatedValue(id, defaultValue) {
-      const input = document.getElementById(id);
-      let value = input.value.trim();
-      if (value === "") {
-        // Если пустое, берем значение из data-lastvalid или default
-        value = input.dataset.lastvalid || defaultValue;
-        input.value = value; // Возвращаем предыдущее значение в поле
-      }
-      // Сохраняем текущее значение как последнее корректное
-      input.dataset.lastvalid = value;
-      return parseFloat(value);
-    }
-
     function calculateTotals() {
-      const panelWidth  = getValidatedValue('panelWidth', 2800);
-      const panelHeight = getValidatedValue('panelHeight', 700);
+      const panelWidth  = parseFloat(document.getElementById('panelWidth').value) || 0;
+      const panelHeight = parseFloat(document.getElementById('panelHeight').value) || 0;
       const panelArea   = (panelWidth / 1000) * (panelHeight / 1000);
       document.getElementById('panelArea').innerText = panelArea.toFixed(2);
 
-      const panelCount  = getValidatedValue('panelCount', 1);
+      const panelCount  = parseFloat(document.getElementById('panelCount').value) || 1;
       const totalArea   = panelArea * panelCount;
 
-      const veneerPrice = getValidatedValue('veneerPrice', 1);
+      const veneerPrice = parseFloat(document.getElementById('veneerPrice').value) || 0;
       document.getElementById('veneerArea').innerText = totalArea.toFixed(2);
       const veneerTotal = totalArea * veneerPrice;
       document.getElementById('veneerTotal').innerText = veneerTotal.toFixed(2);
 
-      const lacquerPrice = getValidatedValue('lacquerPrice', 3);
+      const lacquerPrice = parseFloat(document.getElementById('lacquerPrice').value) || 0;
       document.getElementById('lacquerArea').innerText = totalArea.toFixed(2);
       const lacquerTotal = totalArea * lacquerPrice;
       document.getElementById('lacquerTotal').innerText = lacquerTotal.toFixed(2);
@@ -221,8 +206,6 @@
     // Добавляем обработчик событий для всех полей ввода
     document.querySelectorAll('input[type="number"]').forEach(input => {
       input.addEventListener('input', calculateTotals);
-      // На событии blur (когда пользователь уходит из поля) – тоже пересчитываем,
-      // чтобы, если поле было очищено, подставить предыдущее значение.
       input.addEventListener('blur', calculateTotals);
     });
 
