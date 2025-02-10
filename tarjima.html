@@ -115,12 +115,12 @@
             <div class="input-group">
               <label for="panelWidth">Ширина (мм):</label>
               <!-- Поле пустое, но для расчётов используется резервное значение 2800 -->
-              <input type="number" id="panelWidth" value="" min="1" inputmode="numeric">
+              <input type="number" id="panelWidth" value="" inputmode="numeric">
             </div>
             <div class="input-group">
               <label for="panelHeight">Высота (мм):</label>
               <!-- Резервное значение 700 -->
-              <input type="number" id="panelHeight" value="" min="1" inputmode="numeric">
+              <input type="number" id="panelHeight" value="" inputmode="numeric">
             </div>
           </td>
           <td>
@@ -134,7 +134,7 @@
             <div class="input-group">
               <label for="panelCount">Количество панелей:</label>
               <!-- Резервное значение 1 -->
-              <input type="number" id="panelCount" value="" min="1" inputmode="numeric">
+              <input type="number" id="panelCount" value=""  inputmode="numeric">
             </div>
           </td>
         </tr>
@@ -148,7 +148,7 @@
             <div class="input-group">
               <label for="veneerPrice">Цена за м²:</label>
               <!-- Резервное значение 1 -->
-              <input type="number" id="veneerPrice" value="" step="0.01" min="0" inputmode="decimal">
+              <input type="number" id="veneerPrice" value="" step="0.01" inputmode="decimal">
             </div>
           </td>
           <td>
@@ -164,7 +164,7 @@
             <div class="input-group">
               <label for="lacquerPrice">Цена за м²:</label>
               <!-- Резервное значение 3 -->
-              <input type="number" id="lacquerPrice" value="" step="0.01" min="0" inputmode="decimal">
+              <input type="number" id="lacquerPrice" value="" step="0.01" inputmode="decimal">
             </div>
           </td>
           <td>
