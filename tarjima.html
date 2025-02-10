@@ -114,16 +114,18 @@
           <td>
             <div class="input-group">
               <label for="panelWidth">Ширина (мм):</label>
-              <input type="number" id="panelWidth" value="2800" min="1" inputmode="numeric">
+              <!-- Поле пустое, но для расчётов используется резервное значение 2800 -->
+              <input type="number" id="panelWidth" value="" min="1" inputmode="numeric">
             </div>
             <div class="input-group">
               <label for="panelHeight">Высота (мм):</label>
-              <input type="number" id="panelHeight" value="700" min="1" inputmode="numeric">
+              <!-- Резервное значение 700 -->
+              <input type="number" id="panelHeight" value="" min="1" inputmode="numeric">
             </div>
           </td>
           <td>
             Площадь (м²):<br>
-            <span id="panelArea">1.96</span>
+            <span id="panelArea">0.00</span>
           </td>
           <td rowspan="2" id="panelCost">0.00</td>
         </tr>
@@ -131,7 +133,8 @@
           <td colspan="2">
             <div class="input-group">
               <label for="panelCount">Количество панелей:</label>
-              <input type="number" id="panelCount" value="1" min="1" inputmode="numeric">
+              <!-- Резервное значение 1 -->
+              <input type="number" id="panelCount" value="" min="1" inputmode="numeric">
             </div>
           </td>
         </tr>
@@ -144,12 +147,13 @@
           <td>
             <div class="input-group">
               <label for="veneerPrice">Цена за м²:</label>
-              <input type="number" id="veneerPrice" value="1" step="0.01" min="0" inputmode="decimal">
+              <!-- Резервное значение 1 -->
+              <input type="number" id="veneerPrice" value="" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
             Потребность (м²):<br>
-            <span id="veneerArea">1.96</span>
+            <span id="veneerArea">0.00</span>
           </td>
           <td id="veneerTotal">0.00</td>
         </tr>
@@ -159,12 +163,13 @@
           <td>
             <div class="input-group">
               <label for="lacquerPrice">Цена за м²:</label>
-              <input type="number" id="lacquerPrice" value="3" step="0.01" min="0" inputmode="decimal">
+              <!-- Резервное значение 3 -->
+              <input type="number" id="lacquerPrice" value="" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
             Площадь (м²):<br>
-            <span id="lacquerArea">1.96</span>
+            <span id="lacquerArea">0.00</span>
           </td>
           <td id="lacquerTotal">0.00</td>
         </tr>
@@ -179,21 +184,29 @@
   </div>
 
   <script>
+    // Если поле пустое, для расчётов используется резервное значение,
+    // а само поле остаётся пустым.
+    function getValidatedValue(id, defaultValue) {
+      const input = document.getElementById(id);
+      const value = input.value.trim();
+      return value === "" ? parseFloat(defaultValue) : parseFloat(value);
+    }
+
     function calculateTotals() {
-      const panelWidth  = parseFloat(document.getElementById('panelWidth').value) || 0;
-      const panelHeight = parseFloat(document.getElementById('panelHeight').value) || 0;
+      const panelWidth  = getValidatedValue('panelWidth', 2800);
+      const panelHeight = getValidatedValue('panelHeight', 700);
       const panelArea   = (panelWidth / 1000) * (panelHeight / 1000);
       document.getElementById('panelArea').innerText = panelArea.toFixed(2);
 
-      const panelCount  = parseFloat(document.getElementById('panelCount').value) || 1;
+      const panelCount  = getValidatedValue('panelCount', 1);
       const totalArea   = panelArea * panelCount;
 
-      const veneerPrice = parseFloat(document.getElementById('veneerPrice').value) || 0;
+      const veneerPrice = getValidatedValue('veneerPrice', 1);
       document.getElementById('veneerArea').innerText = totalArea.toFixed(2);
       const veneerTotal = totalArea * veneerPrice;
       document.getElementById('veneerTotal').innerText = veneerTotal.toFixed(2);
 
-      const lacquerPrice = parseFloat(document.getElementById('lacquerPrice').value) || 0;
+      const lacquerPrice = getValidatedValue('lacquerPrice', 3);
       document.getElementById('lacquerArea').innerText = totalArea.toFixed(2);
       const lacquerTotal = totalArea * lacquerPrice;
       document.getElementById('lacquerTotal').innerText = lacquerTotal.toFixed(2);
@@ -203,7 +216,7 @@
       document.getElementById('grandTotal').innerText = panelCost.toFixed(2);
     }
 
-    // Добавляем обработчик событий для всех полей ввода
+    // Обновляем расчёты при каждом вводе данных или при уходе с поля
     document.querySelectorAll('input[type="number"]').forEach(input => {
       input.addEventListener('input', calculateTotals);
       input.addEventListener('blur', calculateTotals);
