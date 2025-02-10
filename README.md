@@ -114,16 +114,18 @@
           <td>
             <div class="input-group">
               <label for="panelWidth">Ширина (мм):</label>
-              <input type="number" id="panelWidth" value="2800" min="1" inputmode="numeric" data-lastvalid="2800">
+              <!-- Поле пустое, но для расчётов используется резервное значение 2800 -->
+              <input type="number" id="panelWidth" value="" min="1" inputmode="numeric">
             </div>
             <div class="input-group">
               <label for="panelHeight">Высота (мм):</label>
-              <input type="number" id="panelHeight" value="700" min="1" inputmode="numeric" data-lastvalid="700">
+              <!-- Резервное значение 700 -->
+              <input type="number" id="panelHeight" value="" min="1" inputmode="numeric">
             </div>
           </td>
           <td>
             Площадь (м²):<br>
-            <span id="panelArea">1.96</span>
+            <span id="panelArea">0.00</span>
           </td>
           <td rowspan="2" id="panelCost">0.00</td>
         </tr>
@@ -131,7 +133,8 @@
           <td colspan="2">
             <div class="input-group">
               <label for="panelCount">Количество панелей:</label>
-              <input type="number" id="panelCount" value="1" min="1" inputmode="numeric" data-lastvalid="1">
+              <!-- Резервное значение 1 -->
+              <input type="number" id="panelCount" value="" min="1" inputmode="numeric">
             </div>
           </td>
         </tr>
@@ -144,12 +147,13 @@
           <td>
             <div class="input-group">
               <label for="veneerPrice">Цена за м²:</label>
-              <input type="number" id="veneerPrice" value="1" step="0.01" min="0" inputmode="decimal" data-lastvalid="1">
+              <!-- Резервное значение 1 -->
+              <input type="number" id="veneerPrice" value="" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
             Потребность (м²):<br>
-            <span id="veneerArea">1.96</span>
+            <span id="veneerArea">0.00</span>
           </td>
           <td id="veneerTotal">0.00</td>
         </tr>
@@ -159,12 +163,13 @@
           <td>
             <div class="input-group">
               <label for="lacquerPrice">Цена за м²:</label>
-              <input type="number" id="lacquerPrice" value="3" step="0.01" min="0" inputmode="decimal" data-lastvalid="3">
+              <!-- Резервное значение 3 -->
+              <input type="number" id="lacquerPrice" value="" step="0.01" min="0" inputmode="decimal">
             </div>
           </td>
           <td>
             Площадь (м²):<br>
-            <span id="lacquerArea">1.96</span>
+            <span id="lacquerArea">0.00</span>
           </td>
           <td id="lacquerTotal">0.00</td>
         </tr>
@@ -179,19 +184,12 @@
   </div>
 
   <script>
-    // Функция для получения корректного значения:
-    // Если поле пустое, используем последнее валидное значение (хранимое в data-lastvalid)
+    // Если поле пустое, для расчётов используется резервное значение,
+    // а само поле остаётся пустым.
     function getValidatedValue(id, defaultValue) {
       const input = document.getElementById(id);
-      let value = input.value.trim();
-      if (value === "") {
-        // Если пустое, берем значение из data-lastvalid или default
-        value = input.dataset.lastvalid || defaultValue;
-        input.value = value; // Возвращаем предыдущее значение в поле
-      }
-      // Сохраняем текущее значение как последнее корректное
-      input.dataset.lastvalid = value;
-      return parseFloat(value);
+      const value = input.value.trim();
+      return value === "" ? parseFloat(defaultValue) : parseFloat(value);
     }
 
     function calculateTotals() {
@@ -218,11 +216,9 @@
       document.getElementById('grandTotal').innerText = panelCost.toFixed(2);
     }
 
-    // Добавляем обработчик событий для всех полей ввода
+    // Обновляем расчёты при каждом вводе данных или при уходе с поля
     document.querySelectorAll('input[type="number"]').forEach(input => {
       input.addEventListener('input', calculateTotals);
-      // На событии blur (когда пользователь уходит из поля) – тоже пересчитываем,
-      // чтобы, если поле было очищено, подставить предыдущее значение.
       input.addEventListener('blur', calculateTotals);
     });
 
